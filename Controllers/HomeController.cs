@@ -21,8 +21,8 @@ namespace MVC_EduScanner.Controllers
         public async Task<IActionResult> ScraperResult()
         {
             var updatedContent = await _scraper.SubmitForm();
-            List<string> links = await _scraper.RunAutomation();
-            return View(links);
+            List<(string Link, string Name)> results = await _scraper.RunAutomation();
+            return View(results);
         }
 
         public IActionResult Index()

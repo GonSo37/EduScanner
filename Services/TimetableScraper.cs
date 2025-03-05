@@ -32,11 +32,9 @@ namespace MVC_EduScanner.Services
 
             return _htmlForm;
         }
-        public async Task<List<string>> RunAutomation()
+        public async Task<List<(string Link, string Name)>> RunAutomation()
         {
-            List<string> links = new();
-
-            
+            List<(string Link, string Name)> results = new();
 
             HtmlDocument htmlDocument = new();
             htmlDocument.LoadHtml(_htmlForm);
@@ -49,16 +47,16 @@ namespace MVC_EduScanner.Services
                 foreach(var node in linkNodes)
                 {
                     string href = node.GetAttributeValue("href", "");
+                    string name = node.InnerText.Trim();
                     if(!string.IsNullOrEmpty(href))
                     {
-                        links.Add(href);
-                        Console.WriteLine(href);
+                        results.Add((href, name));
                     }
                 }
             }
             
 
-            return links;
+            return results;
         }
     }
 }

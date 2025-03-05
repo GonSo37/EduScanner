@@ -1,13 +1,13 @@
-﻿@model List<string>
+﻿@model List<(string Link, string Name)>
 
 <h2>Links:</h2>
 
 @if (Model != null && Model.Count > 0)
 {
 	<ul>
-		@foreach(var link in Model)
+		@foreach(var result in Model)
 		{
-			<li><a href="https://plany.ubb.edu.pl/@link">@link</a></li>
+			<li><a href="https://plany.ubb.edu.pl/@result.Link">@result.Name</a></li>
 		}
 	</ul>
 }
