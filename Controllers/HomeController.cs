@@ -17,7 +17,7 @@ namespace MVC_EduScanner.Controllers
             _scraper = scraper;
         }
 
-
+        
         public async Task<IActionResult> ScraperResult()
         {
             var updatedContent = await _scraper.SubmitForm();

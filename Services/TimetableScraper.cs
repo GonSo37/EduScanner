@@ -7,6 +7,7 @@ namespace MVC_EduScanner.Services
     public class TimetableScraper : ITableScraper
     {
         private readonly HttpClient _httpClient;
+        private string _htmlForm;
 
         public TimetableScraper(HttpClient httpClient)
         {
@@ -27,21 +28,20 @@ namespace MVC_EduScanner.Services
             };
             var content = new FormUrlEncodedContent(values);
             HttpResponseMessage response = await _httpClient.PostAsync(url, content);
-            string responseBody = await response.Content.ReadAsStringAsync();
+            _htmlForm = await response.Content.ReadAsStringAsync();
 
-            return responseBody;
+            return _htmlForm;
         }
         public async Task<List<string>> RunAutomation()
         {
             List<string> links = new();
 
-            string url = "https://plany.ath.bielsko.pl/main.php";
-            string html = await _httpClient.GetStringAsync(url);
+            
 
             HtmlDocument htmlDocument = new();
-            htmlDocument.LoadHtml(html);
+            htmlDocument.LoadHtml(_htmlForm);
 
-            string xpath = ".//table[@class='titles']//input[@id='submit']";
+            string xpath = "//a[@href]";
             HtmlNodeCollection linkNodes = htmlDocument.DocumentNode.SelectNodes(xpath);
 
             if (linkNodes != null)
@@ -56,6 +56,7 @@ namespace MVC_EduScanner.Services
                     }
                 }
             }
+            
 
             return links;
         }
