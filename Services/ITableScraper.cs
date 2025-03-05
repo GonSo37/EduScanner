@@ -2,6 +2,7 @@
 {
     public interface ITableScraper
     {
-        Task<int> RunAutomation();
+        Task<string> SubmitForm();
+        Task<List<string>> RunAutomation();
     }
 }

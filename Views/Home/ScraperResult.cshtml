@@ -1,0 +1,17 @@
+﻿@model List<string>
+
+<h2>Links:</h2>
+
+@if (Model != null && Model.Count > 0)
+{
+	<ul>
+		@foreach(var link in Model)
+		{
+			<li><a href="@link">@link</a></li>
+		}
+	</ul>
+}
+else
+{
+	<p>Link not fined</p>
+}

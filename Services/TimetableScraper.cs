@@ -13,20 +13,51 @@ namespace MVC_EduScanner.Services
             _httpClient = httpClient;
         }
 
-        public async Task<int> RunAutomation()
+        public async Task<string> SubmitForm()
         {
-            int recordsUpdateTotal = 0;
+            string url = "https://plany.ubb.edu.pl/right_menu_result_plan.php";
+            var values = new Dictionary<string, string>
+            {
+                { "search", "plan" },
+                { "word", "" }, 
+                { "groups", "" }, 
+                { "conductors", "1" }, 
+                { "rooms", "" }
+                
+            };
+            var content = new FormUrlEncodedContent(values);
+            HttpResponseMessage response = await _httpClient.PostAsync(url, content);
+            string responseBody = await response.Content.ReadAsStringAsync();
 
-            string url = "https://plany.ubb.edu.pl/";
+            return responseBody;
+        }
+        public async Task<List<string>> RunAutomation()
+        {
+            List<string> links = new();
+
+            string url = "https://plany.ath.bielsko.pl/main.php";
             string html = await _httpClient.GetStringAsync(url);
 
             HtmlDocument htmlDocument = new();
             htmlDocument.LoadHtml(html);
 
-            string xpath = ".//table[@class='branch2']//li[@class='closed']";
-            HtmlNodeCollection allLinks = htmlDocument.DocumentNode.SelectNodes(xpath);
+            string xpath = ".//table[@class='titles']//input[@id='submit']";
+            HtmlNodeCollection linkNodes = htmlDocument.DocumentNode.SelectNodes(xpath);
 
-            return 0;
+            if (linkNodes != null)
+            {
+                foreach(var node in linkNodes)
+                {
+                    string href = node.GetAttributeValue("href", "");
+                    if(!string.IsNullOrEmpty(href))
+                    {
+                        links.Add(href);
+                        Console.WriteLine(href);
+                    }
+                }
+            }
+
+            return links;
         }
     }
 }
