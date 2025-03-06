@@ -1,3 +1,5 @@
+using MVC_EduScanner.Services;
+
 namespace MVC_EduScanner
 {
     public class Program
@@ -6,8 +8,10 @@ namespace MVC_EduScanner
         {
             var builder = WebApplication.CreateBuilder(args);
 
+
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddHttpClient<TimetableScraper>();
 
             var app = builder.Build();
 
