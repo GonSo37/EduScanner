@@ -3,6 +3,7 @@ using MVC_EduScanner.Models;
 using System.Diagnostics;
 using MVC_EduScanner.Services;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace MVC_EduScanner.Controllers
 {
@@ -18,14 +19,26 @@ namespace MVC_EduScanner.Controllers
         }
 
         
-        public async Task<IActionResult> ScraperResult()
+        public async Task<IActionResult> AllPlans()
         {
             var updatedContent = await _scraper.SubmitForm();
-            List<(string Link, string Name)> results = await _scraper.RunAutomation();
-            return View(results);
-        }
 
-        public IActionResult Index()
+            List <(string Link, string Name)> links = await _scraper.GetAllLinks();
+
+            return View(links);
+        }
+        public async Task<IActionResult> ActivePlans()
+        {
+            var updatedContent = await _scraper.SubmitForm();
+
+            List<(string Link, string Name)> links = await _scraper.GetAllLinks();
+
+            List<(string Link, string Name)> activePlans = await _scraper.GetActivePlans(links);
+            return View(activePlans);
+
+           
+        }
+        public async Task<IActionResult> Index()
         {
             return View();
         }
