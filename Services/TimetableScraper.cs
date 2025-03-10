@@ -11,6 +11,7 @@ namespace MVC_EduScanner.Services
         private readonly HttpClient _httpClient;
         HtmlDocument _htmlDocument = new();
         private string _htmlForm;
+        private List<(string Link, string Name)> collectionOfLinks;
 
 
         public TimetableScraper(HttpClient httpClient)
@@ -62,7 +63,6 @@ namespace MVC_EduScanner.Services
 
             return results;
         }
-
         public async Task<List<(string Link, string Name)>> GetActivePlans(List<(string Link, string Name)> allPlans)
         {
             List<(string Link, string Name)> activePlans = new();
@@ -83,6 +83,30 @@ namespace MVC_EduScanner.Services
             }
 
             return activePlans; 
+        }
+
+        public void SaveInFile(List<(string Link, string Name)> activePlans)
+        {
+            string filePath = Path.Combine(Directory.GetCurrentDirectory(), "Files", "activePlans.xlsx");
+
+
+            try
+            {
+                using (StreamWriter writer = new StreamWriter(filePath, append: false)) 
+                {
+                    writer.WriteLine("Name,Link")
+                    foreach(var plan in activePlans)
+                    {
+                        writer.WriteLine($"{plan.Name},{plan.Link}");
+                        
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex}");
+            }
+            
         }
 
 
