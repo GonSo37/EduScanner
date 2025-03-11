@@ -5,6 +5,8 @@
         Task<string> SubmitForm();
         Task<List<(string Link, string Name)>> GetAllLinks();
 
-        Task<List<(string Link, string Name)>> GetActivePlans(List<(string Link, string Name)> links);
+        Task<List<(string Link, string Name)>> GetActivePlansFromFile();
+
+        Task<List<(string Link, string Name)>> GetActivePlansFromWebsite(List<(string Link, string Name)> links);
     }
 }
