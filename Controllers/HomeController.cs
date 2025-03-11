@@ -3,6 +3,7 @@ using MVC_EduScanner.Models;
 using System.Diagnostics;
 using MVC_EduScanner.Services;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace MVC_EduScanner.Controllers
 {
@@ -10,6 +11,7 @@ namespace MVC_EduScanner.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly TimetableScraper _scraper;
+        
 
         public HomeController(ILogger<HomeController> logger, TimetableScraper scraper)
         {
@@ -18,14 +20,30 @@ namespace MVC_EduScanner.Controllers
         }
 
         
-        public async Task<IActionResult> ScraperResult()
+        public async Task<IActionResult> AllPlans()
         {
             var updatedContent = await _scraper.SubmitForm();
-            List<(string Link, string Name)> results = await _scraper.RunAutomation();
-            return View(results);
-        }
 
-        public IActionResult Index()
+            List <(string Link, string Name)> links = await _scraper.GetAllLinks();
+
+            return View(links);
+        }
+        public async Task<IActionResult> ActivePlans()
+        {
+            var activePlans = await _scraper.GetActivePlansFromFile();
+            return View(activePlans);
+
+           
+        }
+        public async Task<IActionResult> UpdateInformationAboutActivePlans()
+        {
+            await _scraper.SubmitForm();
+            var allPlans = await _scraper.GetAllLinks();
+            var activePlans = await _scraper.GetActivePlansFromWebsite(allPlans);
+            _scraper.SavePlansInFile(activePlans);
+            return RedirectToAction("ActivePlans");
+        }
+        public async Task<IActionResult> Index()
         {
             return View();
         }

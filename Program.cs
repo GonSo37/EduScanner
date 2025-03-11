@@ -12,6 +12,10 @@ namespace MVC_EduScanner
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddHttpClient<TimetableScraper>();
+            builder.Services.AddHttpClient<TimetableScraper>(client =>
+            {
+                client.Timeout = TimeSpan.FromMinutes(5);
+            });
 
             var app = builder.Build();
 
