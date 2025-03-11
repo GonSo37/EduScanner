@@ -2,7 +2,7 @@
 
 <div class="conrainer">
 	<div class="row">
-		<div class="col-lg-6">
+		<div class="col-9 col-md-8 col-lg-6">
 			<h2>Links:</h2>
 
 			@if (Model != null && Model.Count > 0)
@@ -25,7 +25,7 @@
 				<p>Links not fined</p>
 			}
 		</div>
-		<div class="col-lg-6">
+		<div class="col-3 col-md-4 col-lg-6">
 			@using (Html.BeginForm("UpdateInformationAboutActivePlans", "Home", FormMethod.Post))
 			{
 				<button type="submit" class="btn btn-primary">Update Information</button>

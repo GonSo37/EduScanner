@@ -14,7 +14,6 @@ namespace MVC_EduScanner.Services
         private readonly HttpClient _httpClient;
         HtmlDocument _htmlDocument = new();
         private string _htmlForm;
-        private List<(string Link, string Name)> collectionOfLinks;
 
         string _filePath = Path.Combine(Directory.GetCurrentDirectory(), "Files", "activePlans.xlsx");
 
@@ -102,10 +101,10 @@ namespace MVC_EduScanner.Services
                     int rowCount = worksheet.Dimension.Rows;
                     int colCount = worksheet.Dimension.Columns;
 
-                    for (int i = 2; i < rowCount; i++)
+                    for (int i = 2; i <= rowCount; i++)
                     {
                         string Name ="", Link = "";
-                        for (int j = 1; j < colCount; j++)
+                        for (int j = 1; j <= colCount; j++)
                         {
                             if(j == 1)
                             {
@@ -129,7 +128,7 @@ namespace MVC_EduScanner.Services
             return activePlans;
         }
 
-        public void SaveInFile(List<(string Link, string Name)> activePlans)
+        public void SavePlansInFile(List<(string Link, string Name)> activePlans)
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
