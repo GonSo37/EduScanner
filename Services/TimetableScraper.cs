@@ -85,7 +85,8 @@ namespace MVC_EduScanner.Services
                 {
                     activePlans.Add((plan.Link, plan.Name));
                     a++;
-                    GetAllLessonsFromPlan();
+                    List<string> lessons = await GetAllLessonsFromPlan();
+
 
                 }
                 if(a == 5)
@@ -168,9 +169,19 @@ namespace MVC_EduScanner.Services
                 }
             }
 
-
-
             return lessons;
+        }
+
+        public async Task<List<string>> GetAlllecture(List<string> lessons)
+        {
+            List<string> onlyLecture = new();
+            Dictionary<string, string> uniqueLessons = new();
+            foreach(var lesson in lessons)
+            {
+
+            }
+
+            return onlyLecture;
         }
 
         public void SavePlansInFile(List<(string Link, string Name)> activePlans)
