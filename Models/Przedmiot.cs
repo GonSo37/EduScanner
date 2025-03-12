@@ -1,4 +1,5 @@
-﻿using static Aplikacja_tworzeniebazy.Models.Modele_klas;
+﻿using static MVC_EduScanner.Models.App_DbContext;
+
 
 namespace MVC_EduScanner.Models
 {

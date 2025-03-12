@@ -1,64 +1,24 @@
-﻿using System.Collections.Generic;
-using System.Reflection.Emit;
-using System;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+using System.Reflection.Emit;
 
-namespace Aplikacja_tworzeniebazy.Models
+namespace MVC_EduScanner.Models
 {
-    public class Modele_klas
-    {
-  
-
-
-public class Przedmiot
-    {
-        public int PrzedmiotID { get; set; }
-        public string NazwaPrzedmiotu { get; set; } = string.Empty;
-
-        // Relacja wiele-do-wielu z prowadzącymi
-        public List<PrzedmiotProwadzacy> PrzedmiotProwadzacy { get; set; } = new List<PrzedmiotProwadzacy>();
-    }
-        /// //////////////////////////////////////////////
-
-        public class Prowadzacy
-    {
-        public int ProwadzacyID { get; set; }
-        public string Imie { get; set; } = string.Empty;
-        public string Nazwisko { get; set; } = string.Empty;
-
-        // Relacja wiele-do-wielu z przedmiotami
-        public List<PrzedmiotProwadzacy> PrzedmiotProwadzacy { get; set; } = new List<PrzedmiotProwadzacy>();
-    }
-       
-        /// //////////////////////////////////////////////
-      
-    public class PrzedmiotProwadzacy
-    {
-        public int PrzedmiotID { get; set; }
-        public Przedmiot Przedmiot { get; set; }
-
-        public int ProwadzacyID { get; set; }
-        public Prowadzacy Prowadzacy { get; set; }
-    }
-
-        /// //////////////////////////////////////////////
-        public class AppDbContext : DbContext
+    public class App_DbContext : DbContext
     {
         private readonly string _connectionString;
 
         // Konstruktor umożliwiający przekazanie connection stringa
-        public AppDbContext(string connectionString)
+        public App_DbContext(string connectionString)
         {
             _connectionString = connectionString;
-            }
+        }
 
         //  wczytanie connection string z pliku json 
         //"ConnectionStrings": {
-   // "DefaultConnection": "Server=LUKASZ\\SQLEXPRESS;Database=UczelniaDB;Trusted_Connection=True;TrustServerCertificate=True;"
-  //} i tworzy baze i tabele
-        public AppDbContext() : this(GetConnectionStringFromConfiguration()) { }
+        // "DefaultConnection": "Server=LUKASZ\\SQLEXPRESS;Database=UczelniaDB;Trusted_Connection=True;TrustServerCertificate=True;"
+        //} i tworzy baze i tabele
+        public App_DbContext() : this(GetConnectionStringFromConfiguration()) { }
         private static string GetConnectionStringFromConfiguration()
         {
             var builder = new ConfigurationBuilder()
@@ -98,6 +58,5 @@ public class Przedmiot
                 .HasForeignKey(pp => pp.ProwadzacyID);
         }
     }
+}
 
-}
-}
