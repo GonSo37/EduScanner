@@ -43,6 +43,12 @@ namespace MVC_EduScanner.Controllers
             _scraper.SavePlansInFile(activePlans);
             return RedirectToAction("ActivePlans");
         }
+
+        public async Task<IActionResult> TeacherLectures()
+        {
+            return View(_scraper.GetTeacherLecture());
+
+        }
         public async Task<IActionResult> Index()
         {
             return View();

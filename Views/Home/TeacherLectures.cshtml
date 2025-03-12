@@ -1,0 +1,21 @@
+﻿@model List<(string teacherName, string lecture)>
+
+@if (Model != null && Model.Count > 0)
+{
+	<ul>
+		@{
+			int i = 0;
+		}
+		@foreach (var result in Model)
+		{
+			i++;
+			<div>
+				<p>@i) @result.teacherName: @result.lecture</p>
+			</div>
+		}
+	</ul>
+}
+else
+{
+	<p>Teachers not fined</p>
+}
