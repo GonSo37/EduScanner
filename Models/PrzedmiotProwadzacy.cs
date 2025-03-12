@@ -1,4 +1,5 @@
-﻿namespace MVC_EduScanner.Models
+﻿using MVC_EduScanner.Models;
+namespace MVC_EduScanner.Models
 {
     public class PrzedmiotProwadzacy
     {

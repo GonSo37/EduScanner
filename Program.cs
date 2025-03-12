@@ -1,4 +1,6 @@
+using Microsoft.EntityFrameworkCore;
 using MVC_EduScanner.Services;
+using MVC_EduScanner.Models;
 
 namespace MVC_EduScanner
 {
@@ -7,7 +9,8 @@ namespace MVC_EduScanner
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
+            builder.Services.AddDbContext<App_DbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
