@@ -71,7 +71,6 @@ namespace MVC_EduScanner.Services
         public async Task<List<(string Link, string Name)>> GetActivePlansFromWebsite(List<(string Link, string Name)> allPlans)
         {
             List<(string Link, string Name)> activePlans = new();
-            int a = 0; 
             foreach (var plan in allPlans)
             {
                 string url = $"https://plany.ubb.edu.pl/{plan.Link}&winW=847&winH=607&loadBG=000000";
@@ -84,7 +83,6 @@ namespace MVC_EduScanner.Services
                 if (linkNodes != null)
                 {
                     activePlans.Add((plan.Link, plan.Name));
-                    a++;
                     List<string> lessons = await GetAllLessonsFromPlan();
                     List<string> filtredLessons = await GetAllLecturesFromPlan(lessons);
                     foreach(var filtredLesson in filtredLessons)
@@ -93,12 +91,8 @@ namespace MVC_EduScanner.Services
 
                     }
                 }
-                if(a == 5)
-                {
-                    return activePlans;
-                }
-            }
 
+            }
             return activePlans; 
         }
 
@@ -142,6 +136,47 @@ namespace MVC_EduScanner.Services
             return activePlans;
         }
 
+        public List<(string teachername, string lectrue)> GetLecturesFromFile()
+        {
+            List<(string teachername, string lectrue)> allLectures = new();
+
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+            try
+            {
+                using (var package = new ExcelPackage(new FileInfo(_filePath)))
+                {
+                    var worksheet = package.Workbook.Worksheets[0];
+                    int rowCount = worksheet.Dimension.Rows;
+                    int colCount = worksheet.Dimension.Columns;
+
+                    for (int i = 2; i <= rowCount; i++)
+                    {
+                        string teacherName = "", lecture = "";
+                        for (int j = 3; j <= 4; j++)
+                        {
+                            if (j == 3)
+                            {
+                                teacherName = worksheet.Cells[i, j].Text;
+                            }
+                            else if (j == 4)
+                            {
+                                lecture = worksheet.Cells[i, j].Text;
+                            }
+                        }
+                        allLectures.Add((teacherName, lecture));
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+
+
+            return allLectures;
+        }
         public async Task<List<string>> GetAllLessonsFromPlan()
         {
             List<string> lessons = new();
@@ -149,7 +184,7 @@ namespace MVC_EduScanner.Services
             string xpath = "(//div[@name='course'])";
             HtmlNodeCollection courseNodes = _htmlDocument.DocumentNode.SelectNodes(xpath);
 
-            if(courseNodes != null)
+            if (courseNodes != null)
             {
                 foreach (var node in courseNodes)
                 {
@@ -159,22 +194,57 @@ namespace MVC_EduScanner.Services
                     doc.LoadHtml(innerHtml);
 
                     var textNodes = doc.DocumentNode.SelectNodes("//text()");
-                    if(textNodes != null && textNodes.Count > 0)
+                    if (textNodes != null && textNodes.Count > 0)
                     {
                         string value = textNodes[0].InnerHtml.Trim();
-                        if (!string.IsNullOrEmpty(value))
+                        string studyFormat = "";
+                        foreach (var formatNode in textNodes )
                         {
-                            lessons.Add(value);
+                            string secondValue = formatNode.InnerHtml.Trim();
+                            if (!string.IsNullOrEmpty(secondValue))
+                            {
+                                
+
+                                if (secondValue.Contains("NZ"))
+                                {
+                                    studyFormat = "Niestacjonarne Zaoczne";
+                                }
+                                else if (secondValue.Contains("Niestacjonarne Wieczorowe"))
+                                {
+                                    studyFormat = "Niestacjonarne Wieczorowe";
+                                }
+                                else if (secondValue.Contains("Stacjonarne"))
+                                {
+                                    studyFormat = "Stacjonarne";
+                                }
+                                else if (secondValue.Contains("NZ-P"))
+                                {
+                                    studyFormat = "Niestacjonarne Zaoczne Parzyste";
+
+                                }
+                                else if (secondValue.Contains("S"))
+                                {
+                                    studyFormat = "Stacjonarne Parzyste";
+                                }
+                                else if (secondValue.Contains("NW Parzyste"))
+                                {
+                                    studyFormat = "Niestacjonarne Wieczorowe Parzyste";
+                                }
+                            }
                         }
+                        if (!string.IsNullOrEmpty(studyFormat))
+                        {
+                            value += ", " + studyFormat;
+                        }
+                        lessons.Add(value);
+
                     }
-
-                  
-
                 }
             }
 
             return lessons;
         }
+
 
         public async Task<List<string>> GetAllLecturesFromPlan(List<string> lessons)
         {
@@ -182,12 +252,20 @@ namespace MVC_EduScanner.Services
             foreach(var lesson in lessons)
             {
                 string[] parts = lesson.Split(", ");
+
+                if (parts.Length < 3)
+                {
+                    Console.WriteLine($"Incorrect lesson format: '{lesson}'");
+                    continue;
+                }
+
                 string name = parts[0];
                 string type = parts[1];
+                string format = parts[2];
 
                 if(!uniqueLessons.ContainsKey(name) || type == "wyk")
                 {
-                    uniqueLessons[name] = type;
+                    uniqueLessons[name] = type + ", " + format;
                 }
 
             }
@@ -206,7 +284,13 @@ namespace MVC_EduScanner.Services
 
         public List<(string teacherName, string lecture)> GetTeacherLecture()
         {
+            Console.WriteLine($"Кількість викладачів: {_finalResult.Count}");
+            foreach (var item in _finalResult)
+            {
+                Console.WriteLine($"Викладач: {item.teacherName}, Лекція: {item.lecture}");
+            }
             return _finalResult;
+            
         }
 
 
@@ -243,7 +327,38 @@ namespace MVC_EduScanner.Services
             
         }
 
+        public void SaveLecturesInFile()
+        {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            try
+            {
+                using(var package = new ExcelPackage((new FileInfo(_filePath))))
+                {
+                    var worksheet = package.Workbook.Worksheets[0];
 
+                    worksheet.Cells[1, 3].Value = "Teacher Name";
+                    worksheet.Cells[1, 4].Value = "Lecture";
+                    int row = 2;
+
+                    foreach(var plan in _finalResult)
+                    {
+                        if (plan.teacherName != "A A")
+                        {
+                            worksheet.Cells[row, 3].Value = plan.teacherName;
+                            worksheet.Cells[row, 4].Value = plan.lecture;
+                            row++;
+                        }
+                    }
+                    package.Save();
+
+                    Console.WriteLine("The file was successfully saved");
+                }
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
 
     }
 }
