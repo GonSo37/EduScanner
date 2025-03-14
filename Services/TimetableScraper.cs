@@ -4,6 +4,8 @@ using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Numerics;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
@@ -14,8 +16,8 @@ namespace MVC_EduScanner.Services
         private readonly HttpClient _httpClient;
         HtmlDocument _htmlDocument = new();
         private string _htmlForm;
-
         string _filePath = Path.Combine(Directory.GetCurrentDirectory(), "Files", "activePlans.xlsx");
+        List<(string teacherName, string lecture)> _finalResult = new();
 
         public TimetableScraper(HttpClient httpClient)
         {
@@ -29,7 +31,7 @@ namespace MVC_EduScanner.Services
             {
                 { "search", "plan" },
                 { "word", "" },
-                { "groups", "1" },
+                { "groups", "" },
                 { "conductors", "1" },
                 { "rooms", "" }
 
@@ -69,7 +71,7 @@ namespace MVC_EduScanner.Services
         public async Task<List<(string Link, string Name)>> GetActivePlansFromWebsite(List<(string Link, string Name)> allPlans)
         {
             List<(string Link, string Name)> activePlans = new();
-
+            int a = 0; 
             foreach (var plan in allPlans)
             {
                 string url = $"https://plany.ubb.edu.pl/{plan.Link}&winW=847&winH=607&loadBG=000000";
@@ -82,6 +84,18 @@ namespace MVC_EduScanner.Services
                 if (linkNodes != null)
                 {
                     activePlans.Add((plan.Link, plan.Name));
+                    a++;
+                    List<string> lessons = await GetAllLessonsFromPlan();
+                    List<string> filtredLessons = await GetAllLecturesFromPlan(lessons);
+                    foreach(var filtredLesson in filtredLessons)
+                    {
+                        _finalResult.Add((plan.Name, filtredLesson));
+
+                    }
+                }
+                if(a == 5)
+                {
+                    return activePlans;
                 }
             }
 
@@ -127,6 +141,74 @@ namespace MVC_EduScanner.Services
 
             return activePlans;
         }
+
+        public async Task<List<string>> GetAllLessonsFromPlan()
+        {
+            List<string> lessons = new();
+
+            string xpath = "(//div[@name='course'])";
+            HtmlNodeCollection courseNodes = _htmlDocument.DocumentNode.SelectNodes(xpath);
+
+            if(courseNodes != null)
+            {
+                foreach (var node in courseNodes)
+                {
+                    string innerHtml = node.InnerHtml;
+
+                    HtmlDocument doc = new HtmlDocument();
+                    doc.LoadHtml(innerHtml);
+
+                    var textNodes = doc.DocumentNode.SelectNodes("//text()");
+                    if(textNodes != null && textNodes.Count > 0)
+                    {
+                        string value = textNodes[0].InnerHtml.Trim();
+                        if (!string.IsNullOrEmpty(value))
+                        {
+                            lessons.Add(value);
+                        }
+                    }
+
+                  
+
+                }
+            }
+
+            return lessons;
+        }
+
+        public async Task<List<string>> GetAllLecturesFromPlan(List<string> lessons)
+        {
+            Dictionary<string, string> uniqueLessons = new();
+            foreach(var lesson in lessons)
+            {
+                string[] parts = lesson.Split(", ");
+                string name = parts[0];
+                string type = parts[1];
+
+                if(!uniqueLessons.ContainsKey(name) || type == "wyk")
+                {
+                    uniqueLessons[name] = type;
+                }
+
+            }
+
+            List<string> filteredLessons = uniqueLessons
+                    .Select(kvp => $"{kvp.Key}, {kvp.Value}")
+                    .ToList();
+
+            foreach (var lesson in filteredLessons)
+            {
+                Console.WriteLine(lesson);
+            }
+
+                return filteredLessons;
+        }
+
+        public List<(string teacherName, string lecture)> GetTeacherLecture()
+        {
+            return _finalResult;
+        }
+
 
         public void SavePlansInFile(List<(string Link, string Name)> activePlans)
         {
