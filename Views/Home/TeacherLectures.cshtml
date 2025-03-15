@@ -1,4 +1,4 @@
-﻿@model List<(string Link, string Name)>
+﻿@model List<(string teacherName, string lecture)>
 
 <div class="container">
 	<div class="row">
@@ -15,7 +15,7 @@
 					{
 						i++;
 						<div>
-							<a href="https://plany.ubb.edu.pl/@result.Link">@i: @result.Name</a>
+							<p>@i) @result.teacherName: <b>@result.lecture</b></p>
 						</div>
 					}
 				</ul>
@@ -26,12 +26,10 @@
 			}
 		</div>
 		<div class="col-3 col-md-4 col-lg-6">
-			@using (Html.BeginForm("UpdateInformationAboutActivePlans", "Home", FormMethod.Post))
+			@using (Html.BeginForm("UpdateInformationAboutLectures", "Home", FormMethod.Post))
 			{
 				<button type="submit" class="btn btn-primary">Update Information</button>
 			}
 		</div>
 	</div>
 </div>
-
-

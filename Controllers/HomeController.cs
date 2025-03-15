@@ -32,8 +32,10 @@ namespace MVC_EduScanner.Controllers
         {
             var activePlans = await _scraper.GetActivePlansFromFile();
             return View(activePlans);
-
-           
+        }
+        public async Task<IActionResult> TeacherLectures()
+        {
+            return View(_scraper.GetLecturesFromFile());
         }
         public async Task<IActionResult> UpdateInformationAboutActivePlans()
         {
@@ -41,8 +43,20 @@ namespace MVC_EduScanner.Controllers
             var allPlans = await _scraper.GetAllLinks();
             var activePlans = await _scraper.GetActivePlansFromWebsite(allPlans);
             _scraper.SavePlansInFile(activePlans);
+            _scraper.SaveLecturesInFile();
             return RedirectToAction("ActivePlans");
         }
+        public async Task<IActionResult> UpdateInformationAboutLectures()
+        {
+            await _scraper.SubmitForm();
+            var allPlans = await _scraper.GetAllLinks();
+            var activePlans = await _scraper.GetActivePlansFromWebsite(allPlans);
+
+            _scraper.SaveLecturesInFile();
+
+            return RedirectToAction("TeacherLectures");
+        }
+  
         public async Task<IActionResult> Index()
         {
             return View();
