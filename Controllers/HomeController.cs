@@ -63,6 +63,10 @@ namespace MVC_EduScanner.Controllers
         }
 
 
+        public IActionResult Info()
+        {
+            return View();
+        }
 
 
         public IActionResult Privacy()
