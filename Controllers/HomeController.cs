@@ -11,7 +11,7 @@ namespace MVC_EduScanner.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly TimetableScraper _scraper;
-        
+
 
         public HomeController(ILogger<HomeController> logger, TimetableScraper scraper)
         {
@@ -19,12 +19,12 @@ namespace MVC_EduScanner.Controllers
             _scraper = scraper;
         }
 
-        
+
         public async Task<IActionResult> AllPlans()
         {
             var updatedContent = await _scraper.SubmitForm();
 
-            List <(string Link, string Name)> links = await _scraper.GetAllLinks();
+            List<(string Link, string Name)> links = await _scraper.GetAllLinks();
 
             return View(links);
         }
@@ -56,11 +56,14 @@ namespace MVC_EduScanner.Controllers
 
             return RedirectToAction("TeacherLectures");
         }
-  
+
         public async Task<IActionResult> Index()
         {
-            return View();
+            return View(_scraper.GetLecturesFromFile());
         }
+
+
+
 
         public IActionResult Privacy()
         {

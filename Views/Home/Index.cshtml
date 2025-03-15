@@ -1,19 +1,25 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Lista przedmiotów";
 }
 
+@model List<(string teacherName, string lecture)>
 
-<div class="flex flex-wrap justify-center items-center bg-[#E2E2E2] rounded-3xl gap-2 shadow-2xl py-[50px]">
-    @for (int i = 0; i < 520; i++)
+
+
+<div class="flex flex-wrap justify-center items-center bg-[#E2E2E2] rounded-3xl gap-2 p-12">
+    @foreach (var cell in Model)
     {
-        <div class="w-[200px] h-[150px] rounded-xl flex flex-col justify-center items-center bg-[#cacaca] ">
-            <span class="text-xs font-semibold">prowadzący</span>
-            <span class="font-bold">Imie nazwisko</span>
+        <div
+            class="w-[250px] h-[175px] rounded-xl flex flex-col justify-center items-center bg-[#cacaca] p-3 text-center gap-3">
+            <div class="flex flex-col items-center"> <span class="text-xs font-semibold">prowadzący</span>
+                <span class="font-bold">@cell.teacherName</span>
+            </div>
 
 
-            <span class="text-xs font-semibold">przedmiot</span>
-            <span class="font-bold">Nazwa przedmiotu</span>
-            <span class="font-bold">rodzaj przedmiotu</span>
+            <div class="flex flex-col items-center">
+                <span class="text-xs font-semibold">przedmiot</span>
+                <span class="font-bold ">@cell.lecture</span>
+            </div>
 
 
         </div>

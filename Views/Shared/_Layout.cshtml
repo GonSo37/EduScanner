@@ -15,25 +15,30 @@
 
 <body>
 
-    <div class="w-screen min-h-screen flex justify-center">
-        <div class="max-w-[1440px] space-y-4  flex flex-col items-start p-4 h-full ">
+    <div class="w-screen min-h-screen flex justify-center ">
+        <div class="max-w-[1440px] space-y-4  flex flex-col items-start p-4 h-full  w-full">
             <header
                 class="w-full flex items-center font-bold text-2xl h-[48px] bg-[#E2E2E2] rounded-2xl  px-4 justify-between">
-                <span>EduScanner</span>
+                <a href="/" class="text-decoration-none text-black">
+                    <span>EduScanner</span></a>
                 <div class="w-fit h-fit flex gap-2 items-center justify-center">
+
                     <button class="button-xs">
                         <img src="~/images/refreshIcon.svg" alt="odśwież">
                     </button>
-                    <button class="button-xs ">
-                        <img src="~/images/infoIcon.svg" alt="info">
-                    </button>
+
+                    <a href="/home/info">
+                        <button class="button-xs ">
+                            <img src="~/images/infoIcon.svg" alt="info">
+                        </button>
+                    </a>
                 </div>
             </header>
-            <div>
-                <main role="main">
-                    @RenderBody()
-                </main>
-            </div>
+
+            <main role="main" class="w-full">
+                @RenderBody()
+            </main>
+
 
 
         </div>
