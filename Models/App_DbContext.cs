@@ -44,6 +44,15 @@ namespace MVC_EduScanner.Models
         // Konfiguracja relacji 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Konfiguracja, aby enumy były zapisane jako tekst
+            modelBuilder.Entity<Prowadzacy>()
+                .Property(p => p.Tytul)
+                .HasConversion<string>();
+
+            modelBuilder.Entity<Przedmiot>()
+                .Property(k => k.Format)
+                .HasConversion<string>();
+
             modelBuilder.Entity<PrzedmiotProwadzacy>()
                 .HasKey(pp => new { pp.PrzedmiotID, pp.ProwadzacyID });
 
