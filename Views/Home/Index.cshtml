@@ -1,8 +1,27 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Lista przedmiotów";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+@model List<(string teacherName, string lecture)>
+
+
+
+<div class="flex flex-wrap justify-center items-center bg-[#E2E2E2] rounded-3xl gap-2 p-12">
+    @foreach (var cell in Model)
+    {
+        <div
+            class="w-[250px] h-[175px] rounded-xl flex flex-col justify-center items-center bg-[#cacaca] p-3 text-center gap-3">
+            <div class="flex flex-col items-center"> <span class="text-xs font-semibold">prowadzący</span>
+                <span class="font-bold">@cell.teacherName</span>
+            </div>
+
+
+            <div class="flex flex-col items-center">
+                <span class="text-xs font-semibold">przedmiot</span>
+                <span class="font-bold ">@cell.lecture</span>
+            </div>
+
+
+        </div>
+    }
 </div>

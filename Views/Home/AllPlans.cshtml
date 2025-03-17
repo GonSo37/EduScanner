@@ -1,0 +1,21 @@
+﻿@model List<(string Link, string Name)>
+
+<h2>Links:</h2>
+
+@if (Model != null && Model.Count > 0)
+{
+	<ul>
+		@{ int i = 0; }
+		@foreach(var result in Model)
+		{
+			i++; 
+			<div>
+				<a href="https://plany.ubb.edu.pl/@result.Link">@i: @result.Name</a>
+			</div>
+		}
+	</ul>
+}
+else
+{
+	<p>Link not fined</p>
+}

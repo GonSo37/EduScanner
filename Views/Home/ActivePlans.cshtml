@@ -1,0 +1,37 @@
+﻿@model List<(string Link, string Name)>
+
+<div class="container">
+	<div class="row">
+		<div class="col-9 col-md-8 col-lg-6">
+			<h2>Links:</h2>
+
+			@if (Model != null && Model.Count > 0)
+			{
+				<ul>
+					@{
+						int i = 0;
+					}
+					@foreach (var result in Model)
+					{
+						i++;
+						<div>
+							<a href="https://plany.ubb.edu.pl/@result.Link">@i: @result.Name</a>
+						</div>
+					}
+				</ul>
+			}
+			else
+			{
+				<p>Links not fined</p>
+			}
+		</div>
+		<div class="col-3 col-md-4 col-lg-6">
+			@using (Html.BeginForm("UpdateInformationAboutActivePlans", "Home", FormMethod.Post))
+			{
+				<button type="submit" class="btn btn-primary">Update Information</button>
+			}
+		</div>
+	</div>
+</div>
+
+
