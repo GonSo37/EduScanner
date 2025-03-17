@@ -11,15 +11,18 @@
 ## Features
 
   📅 Lecture Display: Shows all available lecture sessions for each subject.
+  
   🔄 Alternative Sessions: If no lectures are available, the application shows the next most relevant session type.
+  
   🌐 Data Update: Easily update the information using a web scraping tool to fetch the latest schedule data.
+  
   💻 Responsive Design: Optimized for desktop and mobile devices.
 
 ## Installation
   1. Clone the repository:  
-   ```bash
-     git clone https://github.com/GonSo37/EduScanner
-```
+     ```bash
+       git clone https://github.com/GonSo37/EduScanner
+     ```
  2. Install dependencies:
     ```bash
     npm install
