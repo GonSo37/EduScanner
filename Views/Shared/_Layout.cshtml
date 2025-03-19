@@ -18,7 +18,7 @@
     <div class="w-screen min-h-screen flex justify-center ">
         <div class="max-w-[1440px] space-y-4  flex flex-col items-start p-4 h-full  w-full">
             <header
-            class="w-full flex items-center font-bold text-2xl h-[48px] bg-[#E2E2E2] rounded-2xl  px-4 justify-between">
+                class="w-full flex items-center font-bold text-2xl h-[48px] bg-[#E2E2E2] rounded-2xl  px-4 justify-between">
                 <a href="/" class="text-decoration-none text-black">
                     <span>EduScanner</span></a>
                 <div class="w-fit h-fit flex gap-2 items-center justify-center">
@@ -26,7 +26,8 @@
                     @using (Html.BeginForm("UpdateInformationAboutLectures", "Home", FormMethod.Post))
                     {
                         <button class="button-xs">
-                            <img src="~/images/refreshIcon.svg" alt="odśwież">
+                            <img src="~/images/refreshIcon.svg" alt="odśwież"
+                                title="Czas oczekiwania na otrzymanie odświeżonych wyników to około ~5min" />
                         </button>
                     }
 
